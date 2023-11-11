@@ -5,26 +5,43 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.utils.TimeUtils;
 
 public class SplashScreen implements Screen{
     private SpriteBatch batch;
     private Texture logo;
     private Game game;
+    private BitmapFont font; // Adiciona um BitmapFont
 
-    private long startTime;
-    private static final long SPLASH_TIME = 3000; // Tempo de splash em milissegundos (3 segundos)
+    private float scale;
+    private float screenWidth;
+    private float screenHeight;
+
+    private GlyphLayout layout; // Usado para calcular a largura do texto
 
     public SplashScreen(Game game) {
         this.game = game;
-        startTime = TimeUtils.millis(); // Captura o tempo quando a tela é criado
     }
 
     @Override
     public void show() {
         batch = new SpriteBatch();
         logo = new Texture("logo.png"); // Substitua pelo caminho correto do seu logo
+        font = new BitmapFont(); // Inicializa o BitmapFont
+        font.getData().setScale(3); // Ajusta o tamanho do texto, se necessário
+        layout = new GlyphLayout(); // Inicializa o GlyphLayout
+
+        screenWidth = Gdx.graphics.getWidth();
+        screenHeight = Gdx.graphics.getHeight();
+        updateScale(); // Atualiza a escala
+    }
+
+    private void updateScale() {
+        float logoWidth = logo.getWidth();
+        float logoHeight = logo.getHeight();
+        scale = Math.min(screenWidth / logoWidth, screenHeight / logoHeight);
     }
 
     @Override
@@ -35,18 +52,31 @@ public class SplashScreen implements Screen{
         batch.begin();
         batch.draw(logo, Gdx.graphics.getWidth() / 2 - logo.getWidth() / 2,
                 Gdx.graphics.getHeight() / 2 - logo.getHeight() / 2);
+
+        String text = "Toque em qualquer lugar para continuar";
+
+        layout.setText(font, text); // Calcula a largura do texto
+
+        // Posição do texto na parte inferior da tela, centralizado
+        float textX = (1280 - layout.width) / 2;
+        float textY = 60;
+        font.draw(batch, layout, textX, textY);
+
+        //font.draw(batch, text, Gdx.graphics.getWidth() / 2 - font.getRegion().getRegionWidth() / 2,
+                //Gdx.graphics.getHeight() / 4); // Posição do texto na tela
+        // font.draw(batch, text, Gdx.graphics.getWidth() / 2 - font.getRegion().getRegionWidth() / 2,
+        //                30); // 30 pixels acima da parte inferior da tela
         batch.end();
 
         // Aqui você pode adicionar uma condição para mudar para a tela do menu após alguns segundos ou ao tocar na tela
-        // Exemplo: if (Gdx.input.justTouched()) { game.setScreen(new MenuScreen(game)); }
-//        if (TimeUtils.millis() > (startTime + SPLASH_TIME)) {
-//            game.setScreen(new MainMenuScreen(game)); // Muda para o MainMenuScreen
-//            dispose(); // Não esqueça de chamar dispose para liberar os recursos da SplashScreen
-//        }
+        if (Gdx.input.justTouched()) { game.setScreen(new MainMenuScreen(game)); }
     }
 
     @Override
     public void resize(int width, int height) {
+        screenWidth = width;
+        screenHeight = height;
+        updateScale();
     }
 
     @Override
@@ -65,6 +95,8 @@ public class SplashScreen implements Screen{
     public void dispose() {
         batch.dispose();
         logo.dispose();
+        font.dispose();
+
     }
 }
 
