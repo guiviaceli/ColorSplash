@@ -84,11 +84,14 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import Player.PlayerCamera;
 
 public class GameScreen implements Screen {
     private Game game;
     private GameMap map;
     private final OrthographicCamera camera;
+    private PlayerCamera playerCamera;
+
 
     SpriteBatch batch;
     public static Player player;
@@ -107,6 +110,7 @@ public class GameScreen implements Screen {
 
         this.map = new GameMap("mapa2.tmx");
         player = new Player(map.getMapWidth(), map.getMapHeight());
+        playerCamera = new PlayerCamera(10, 10);
         batch = new SpriteBatch();
     }
     @Override
@@ -118,6 +122,11 @@ public class GameScreen implements Screen {
         batch.begin();
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+        // Atualizar a câmera com a posição do jogador
+        playerCamera.update(player);
+
+        // Configurar o batch para usar a matriz de projeção da câmera
+        batch.setProjectionMatrix(playerCamera.getCamera().combined);
 
         camera.update();
         map.render(camera);
