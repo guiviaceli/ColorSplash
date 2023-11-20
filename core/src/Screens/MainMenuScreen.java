@@ -29,6 +29,7 @@ public class MainMenuScreen implements Screen {
 
     public MainMenuScreen(Game game) {
         this.game = game;
+        final Game finalGame = game; // Cria uma cópia final da variável game
         stage = new Stage();
 
         Texture upTexture = new Texture(Gdx.files.internal("blue-.png")); // Caminho para a imagem no estado normal
@@ -52,7 +53,7 @@ public class MainMenuScreen implements Screen {
         playButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                // Código para mudar para a tela do jogo
+                finalGame.setScreen(new GameScreen(finalGame)); // Muda para a tela do jogo
             }
         });
 
