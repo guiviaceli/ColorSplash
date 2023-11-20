@@ -1,5 +1,6 @@
 package Player;
 
+import Map.GameMap;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.utils.Array;
@@ -9,6 +10,8 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 public class Player extends Sprite {
+    private float mapWidth, mapHeight; // As dimensões do seu mapa
+
     PlayerInputProcessor playerInputProcessor;
     private static final int FRAME_WIDTH = 24;
     private static final int FRAME_HEIGHT = 32;
@@ -24,8 +27,10 @@ public class Player extends Sprite {
 
     private TextureRegion currentFrame; // O frame atual para desenhar
 
-    public Player(){
+    public Player(int mapWidth, int mapHeight){
         super(ColorSplash.manager.<Texture>get("Mage.png"));
+        this.mapWidth = mapWidth;
+        this.mapHeight = mapHeight;
         playerInputProcessor = new PlayerInputProcessor();
         ColorSplash.addInputProcessor(playerInputProcessor);
         this.frameRow = 0; // Inicializar com a linha de 'DOWN'
@@ -90,6 +95,18 @@ public class Player extends Sprite {
         } else if (playerInputProcessor.RIGHT) {
             x += speed * delta;
             frameRow = 1; // Ajuste conforme a direção correta para direita
+        }
+
+        if (x < 0) {
+            x = 0;
+        } else if (x + FRAME_WIDTH > mapWidth) {
+            x = mapWidth - FRAME_WIDTH;
+        }
+
+        if (y < 0) {
+            y = 0;
+        } else if (y + FRAME_HEIGHT > mapHeight) {
+            y = mapHeight - FRAME_HEIGHT;
         }
 
 //        if(playerInputProcessor.UP){

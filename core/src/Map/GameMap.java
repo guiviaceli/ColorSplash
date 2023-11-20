@@ -1,6 +1,7 @@
 package Map;
 
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
@@ -9,9 +10,16 @@ public class GameMap {
     private TiledMap tiledMap;
     private OrthogonalTiledMapRenderer tiledMapRenderer;
 
+    private int mapWidth, mapHeight;
+
+
     public GameMap(String mapPath) {
         tiledMap = new TmxMapLoader().load(mapPath);
         tiledMapRenderer = new OrthogonalTiledMapRenderer(tiledMap);
+
+        TiledMapTileLayer layer = (TiledMapTileLayer) tiledMap.getLayers().get(0);
+        mapWidth = layer.getWidth() * (int) layer.getTileWidth();
+        mapHeight = layer.getHeight() * (int) layer.getTileHeight();
     }
 
     public void render(OrthographicCamera tiledCamera) {
@@ -23,5 +31,11 @@ public class GameMap {
         tiledMap.dispose();
         tiledMapRenderer.dispose();
     }
+    public int getMapWidth() {
+        return mapWidth;
+    }
 
+    public int getMapHeight() {
+        return mapHeight;
+    }
 }

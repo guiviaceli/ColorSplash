@@ -99,13 +99,14 @@ public class GameScreen implements Screen {
 ////        Gdx.input.setInputProcessor(playerInputProcessor);
 //    }
     public GameScreen(Game game) {
-        player = new Player();
+
         this.game = game;
         this.camera = new OrthographicCamera();
         this.camera.setToOrtho(false, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         this.camera.update();
 
         this.map = new GameMap("mapa2.tmx");
+        player = new Player(map.getMapWidth(), map.getMapHeight());
         batch = new SpriteBatch();
     }
     @Override
