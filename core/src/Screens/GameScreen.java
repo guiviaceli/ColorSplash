@@ -89,7 +89,7 @@ import Player.PlayerCamera;
 public class GameScreen implements Screen {
     private Game game;
     private GameMap map;
-    private final OrthographicCamera camera;
+    //private final OrthographicCamera camera;
     private PlayerCamera playerCamera;
 
 
@@ -104,13 +104,13 @@ public class GameScreen implements Screen {
     public GameScreen(Game game) {
 
         this.game = game;
-        this.camera = new OrthographicCamera();
-        this.camera.setToOrtho(false, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-        this.camera.update();
+//        this.camera = new OrthographicCamera();
+//        this.camera.setToOrtho(false, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+//        this.camera.update();
 
         this.map = new GameMap("mapa2.tmx");
         player = new Player(map.getMapWidth(), map.getMapHeight());
-        playerCamera = new PlayerCamera(10, 10);
+        playerCamera = new PlayerCamera(800, 600);
         batch = new SpriteBatch();
     }
     @Override
@@ -119,25 +119,28 @@ public class GameScreen implements Screen {
     }
     @Override
     public void render(float delta) {
-        batch.begin();
-        Gdx.gl.glClearColor(0, 0, 0, 1);
-        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-        // Atualizar a câmera com a posição do jogador
         playerCamera.update(player);
 
         // Configurar o batch para usar a matriz de projeção da câmera
         batch.setProjectionMatrix(playerCamera.getCamera().combined);
 
-        camera.update();
-        map.render(camera);
+        batch.begin();
+        Gdx.gl.glClearColor(0, 0, 0, 1);
+        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+        // Atualizar a câmera com a posição do jogador
+
+        //camera.update();
+        //map.render(camera);
+        map.render(playerCamera.getCamera()); // Renderizar o mapa usando a câmera do jogador
+
         player.draw(batch, Gdx.graphics.getDeltaTime());
         batch.end();
     }
     @Override
     public void resize(int width, int height) {
-        camera.viewportWidth = width;
-        camera.viewportHeight = height;
-        camera.update();
+//        camera.viewportWidth = width;
+//        camera.viewportHeight = height;
+//        camera.update();
     }
     @Override
     public void pause() {
