@@ -4,7 +4,7 @@ import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.InputProcessor;
 
 public class PlayerInputProcessor implements InputProcessor {
-
+    public boolean ATTACK = false;
     boolean UP, DOWN, LEFT, RIGHT;
     @Override
     public boolean keyDown(int keycode) {
@@ -19,6 +19,9 @@ public class PlayerInputProcessor implements InputProcessor {
                 break;
             case Keys.D:
                 RIGHT = true;
+                break;
+            case Keys.SPACE:
+                ATTACK = true;
                 break;
         }
         return true;
@@ -37,6 +40,9 @@ public class PlayerInputProcessor implements InputProcessor {
                 break;
             case Keys.D:
                 RIGHT = false;
+                break;
+            case Keys.SPACE:
+                ATTACK = false;
                 break;
         }
         return true;

@@ -29,17 +29,21 @@ public class ColorSplash extends Game {
 		manager.load("red-.png", Texture.class);
 		manager.load("tileset.png", Texture.class);
 		manager.load("Mage.png", Texture.class);
+		manager.load("BLACK.png", Texture.class);
+		manager.load("BLUE.png", Texture.class);
+		manager.load("BLUE_LIGHT.png", Texture.class);
+		manager.load("RED.png", Texture.class);
 
-		//manager.load("sounds/wavetable.mp3", Music.class);
-		//manager.load("sounds/laser_gun.mp3", Sound.class);
+		//manager.load("sounds/music.mp3", Music.class); musica
+		//manager.load("sounds/sound.mp3", Sound.class); efeitos especiais
 
 		manager.finishLoading();
 
-//		music = manager.get("sounds/wavetable.mp3");
+//		music = manager.get("sounds/music.mp3");
 //		music.setLooping(true);
 //		music.setVolume(0.02f);
 //		music.play();
-		// Define a tela inicial do jogo para a SplashScreen
+
 		this.setScreen(new SplashScreen(this));
 	}
 
