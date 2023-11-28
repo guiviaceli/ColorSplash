@@ -39,7 +39,6 @@ public class MainMenuScreen implements Screen {
         BitmapFont buttonFont = new BitmapFont(); // Você pode usar uma fonte personalizada aqui
         buttonFont.getData().setScale(3); // Aumenta o tamanho da fonte
 
-
         TextButtonStyle style = new TextButtonStyle();
         style.up = new TextureRegionDrawable(upRegion);
         style.down = new TextureRegionDrawable(downRegion);
@@ -118,7 +117,5 @@ public class MainMenuScreen implements Screen {
         batch.dispose();
         background.dispose();
         title.dispose(); // Libera a textura do título
-
     }
-
 }

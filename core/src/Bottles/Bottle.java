@@ -18,20 +18,20 @@ public class Bottle extends Sprite {
     public Bottle(int type) {
         switch (type) {
             case 0:
-                this.texture = ColorSplash.manager.get("BLACK.png", Texture.class);
+                this.texture = ColorSplash.manager.get("Bottles/BLACK.png", Texture.class);
                 this.color = "BLACK";
 
                 break;
             case 1:
-                this.texture = ColorSplash.manager.get("BLUE.png", Texture.class);
+                this.texture = ColorSplash.manager.get("Bottles/BLUE.png", Texture.class);
                 this.color = "BLUE";
                 break;
             case 2:
-                this.texture = ColorSplash.manager.get("BLUE_LIGHT.png", Texture.class);
+                this.texture = ColorSplash.manager.get("Bottles/BLUE_LIGHT.png", Texture.class);
                 this.color = "BLUE LIGHT";
                 break;
             case 3:
-                this.texture = ColorSplash.manager.get("RED.png", Texture.class);
+                this.texture = ColorSplash.manager.get("Bottles/RED.png", Texture.class);
                 this.color = "RED";
                 break;
         }

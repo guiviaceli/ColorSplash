@@ -1,27 +1,40 @@
 package Player;
 
+import Utils.InputManager;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.InputProcessor;
 
 public class PlayerInputProcessor implements InputProcessor {
     public boolean ATTACK = false;
     boolean UP, DOWN, LEFT, RIGHT;
+
     @Override
     public boolean keyDown(int keycode) {
         switch (keycode) {
             case Keys.W:
                 UP = true;
+                System.out.println("Key DownP: " + keycode);
+
                 break;
             case Keys.S:
                 DOWN = true;
+                System.out.println("Key DownP: " + keycode);
+
+                break;
             case Keys.A:
-                LEFT = true;
+                LEFT = true;    System.out.println("Key DownP: " + keycode);
+
+
                 break;
             case Keys.D:
                 RIGHT = true;
+                System.out.println("Key DownP: " + keycode);
+
                 break;
             case Keys.SPACE:
                 ATTACK = true;
+                System.out.println("Key DownP: " + keycode);
+
                 break;
         }
         return true;
@@ -35,6 +48,7 @@ public class PlayerInputProcessor implements InputProcessor {
                 break;
             case Keys.S:
                 DOWN = false;
+                break;
             case Keys.A:
                 LEFT = false;
                 break;

@@ -14,13 +14,6 @@ public class ColorSplash extends Game {
 	public static AssetManager manager;
 	public static Music music;
 
-	public static InputMultiplexer multiplexer;
-
-	public static void addInputProcessor(InputProcessor inputProcessor){
-		if (multiplexer == null) multiplexer = new InputMultiplexer();
-		multiplexer.addProcessor(inputProcessor);
-		Gdx.input.setInputProcessor(multiplexer);
-	}
 	@Override
 	public void create() {
 		manager = new AssetManager();
@@ -28,14 +21,19 @@ public class ColorSplash extends Game {
 		manager.load("logo.png", Texture.class);
 		manager.load("red-.png", Texture.class);
 		manager.load("tileset.png", Texture.class);
-		manager.load("Mage.png", Texture.class);
-		manager.load("BLACK.png", Texture.class);
-		manager.load("BLUE.png", Texture.class);
-		manager.load("BLUE_LIGHT.png", Texture.class);
-		manager.load("RED.png", Texture.class);
+		manager.load("Characters/Mage.png", Texture.class);
+		manager.load("Bottles/BLACK.png", Texture.class);
+		manager.load("Bottles/BLUE.png", Texture.class);
+		manager.load("Bottles/BLUE_LIGHT.png", Texture.class);
+		manager.load("Bottles/RED.png", Texture.class);
+		manager.load("Puddles/puddle_black.png", Texture.class);
+		manager.load("Puddles/puddle_red.png", Texture.class);
+		manager.load("Puddles/puddle_blue.png", Texture.class);
+		manager.load("Puddles/puddle_blue_light.png", Texture.class);
+		manager.load("Characters/Fighter.png", Texture.class);
 
 		//manager.load("sounds/music.mp3", Music.class); musica
-		//manager.load("sounds/sound.mp3", Sound.class); efeitos especiais
+		manager.load("sounds/Bottle Break.wav", Sound.class); //efeitos especiais
 
 		manager.finishLoading();
 
@@ -49,16 +47,13 @@ public class ColorSplash extends Game {
 
 	@Override
 	public void render() {
-		super.render(); // Essa chamada delega a renderização para a tela atual
+		super.render();
 	}
 
 	@Override
 	public void dispose() {
-		// Se você tiver outras telas, elas também devem ser descartadas.
 		if (getScreen() != null) {
 			getScreen().dispose();
-			//MainMenuScreen.dispose();
-			//SplashScreen.dispose();
 		}
 	}
 }
