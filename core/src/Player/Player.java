@@ -4,6 +4,7 @@ import Bottles.Bottle;
 import Bottles.RandomBottles;
 import Puddles.Puddle;
 import Screens.GameScreen;
+import Utils.Damageable;
 import Utils.Direction;
 import Utils.AttackEffectHandler;
 import com.badlogic.gdx.audio.Sound;
@@ -26,7 +27,7 @@ import java.util.List;
 import static Screens.GameScreen.player;
 import static jdk.jfr.internal.handlers.EventHandler.duration;
 
-public class Player extends Sprite {
+public class Player extends Sprite implements Damageable {
     private float mapWidth, mapHeight;
     private PlayerInputProcessor playerInputProcessor;
     private static final int FRAME_WIDTH = 24;
@@ -124,8 +125,6 @@ public class Player extends Sprite {
         return new Vector2(x, y);
     }
     public void update(float delta) {
-        System.out.println("ENTROU AQUII");
-
         boolean isMoving = playerInputProcessor.UP || playerInputProcessor.DOWN || playerInputProcessor.LEFT || playerInputProcessor.RIGHT;
 
         if (isMoving) {
@@ -188,19 +187,24 @@ public class Player extends Sprite {
         useOrDiscardBottle();
 
     }
+    @Override
     public Rectangle getHitbox() {
         return playerHitbox;
     }
+    @Override
     public Rectangle getHealthBox() {
         return playerHealth;
     }
+    @Override
     public List<Puddle> getPuddles() {
         return puddles;
     }
-
+    @Override
     public void takeDamage(int damage) {
         if (invulnerabilityTime <= 0) {
             currentHealth -= damage;
+
+            System.out.println("Damage taken: " + damage + ", New health: " + currentHealth);
             if (currentHealth < 0) {
                 currentHealth = 0;
             }
@@ -208,8 +212,8 @@ public class Player extends Sprite {
             updateHealthBar();
         }
     }
-
-    private void updateHealthBar() {
+    @Override
+    public void updateHealthBar() {
         float healthPercent = (float) currentHealth / maxHealth;
         playerHealth.setWidth((getWidth() - 28) * healthPercent);
     }

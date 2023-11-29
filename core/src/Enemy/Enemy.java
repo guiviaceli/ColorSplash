@@ -5,6 +5,8 @@ import Bottles.RandomBottles;
 import Puddles.Puddle;
 import Screens.GameScreen;
 import Utils.AttackEffectHandler;
+import Utils.Damageable;
+import Utils.Direction;
 import Utils.Direction1;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
@@ -21,7 +23,7 @@ import com.mygdx.game.ColorSplash;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Enemy extends Sprite{
+public class Enemy extends Sprite implements Damageable {
     private float mapWidth, mapHeight;
     private static final int FRAME_WIDTH = 24;
     private static final int FRAME_HEIGHT = 32;
@@ -37,11 +39,8 @@ public class Enemy extends Sprite{
     private Rectangle player2Hitbox;
     private Rectangle player2Health;
     private Bottle collectibleBottle;
-    //private List<Sprite> spritesParaRenderizar = new ArrayList<>();
-//    public enum Direction {
-//        UP, DOWN, LEFT, RIGHT
-//    }
-    private Direction1 currentDirection;
+
+    private Direction currentDirection;
 
     private int maxHealth = 100;
     private int currentHealth = maxHealth;
@@ -121,9 +120,7 @@ public class Enemy extends Sprite{
         return new Vector2(x, y);
     }
     public void update(float delta) {
-        System.out.println("TA ENTRANDO AQUI ");
-
-        boolean isMoving = player2InputProcessor.UP1 || player2InputProcessor.DOWN1 || player2InputProcessor.LEFT1 || player2InputProcessor.RIGHT1;
+        boolean isMoving = player2InputProcessor.UP || player2InputProcessor.DOWN || player2InputProcessor.LEFT || player2InputProcessor.RIGHT;
 
         if (isMoving) {
             stateTime += delta;
@@ -139,23 +136,23 @@ public class Enemy extends Sprite{
         player2Hitbox.setPosition(x, y);
         player2Health.setPosition(x, y+140);
 
-        if (player2InputProcessor.UP1) {
+        if (player2InputProcessor.UP) {
             y += speed * delta;
             frameRow = 0;
-            currentDirection = Direction1.UP;
-        } else if (player2InputProcessor.DOWN1) {
+            currentDirection = Direction.UP;
+        } else if (player2InputProcessor.DOWN) {
             y -= speed * delta;
             frameRow = 2;
-            currentDirection = Direction1.DOWN;
-        } else if (player2InputProcessor.LEFT1) {
+            currentDirection = Direction.DOWN;
+        } else if (player2InputProcessor.LEFT) {
             x -= speed * delta;
             frameRow = 3;
-            currentDirection = Direction1.LEFT;
-        } else if (player2InputProcessor.RIGHT1) {
+            currentDirection = Direction.LEFT;
+        } else if (player2InputProcessor.RIGHT) {
             x += speed * delta;
             frameRow = 1;
-            currentDirection = Direction1.RIGHT;
-        }else if (player2InputProcessor.ATTACK1  && hasBottle) {
+            currentDirection = Direction.RIGHT;
+        }else if (player2InputProcessor.ATTACK  && hasBottle) {
             attack();
         }
 
@@ -181,24 +178,27 @@ public class Enemy extends Sprite{
         System.out.println("ATACANDO");
         System.out.println("Cor da garrafa " + (collectedBottle.getBottleColor()));
 
-        AttackEffectHandler.createAttackEffect1(collectedBottle,currentDirection, this.getX(), this.getY(), puddles);
+        AttackEffectHandler.createAttackEffect(collectedBottle,currentDirection, this.getX(), this.getY(), puddles);
         useOrDiscardBottle();
 
     }
 
+    // Implementações dos métodos de Damageable
+    @Override
+    public List<Puddle> getPuddles() {
+        return puddles;
+
+    }
+    @Override
     public Rectangle getHitbox() {
         return player2Hitbox;
     }
-    public Rectangle getHealthBox() {
-        return player2Health;
-    }
-    public List<Puddle> getPuddles() {
-        return puddles;
-    }
-
+    @Override
     public void takeDamage(int damage) {
         if (invulnerabilityTime <= 0) {
             currentHealth -= damage;
+            System.out.println("Damage taken: " + damage + ", New health: " + currentHealth);
+
             if (currentHealth < 0) {
                 currentHealth = 0;
             }
@@ -206,9 +206,14 @@ public class Enemy extends Sprite{
             updateHealthBar();
         }
     }
-
-    private void updateHealthBar() {
+    @Override
+    public Rectangle getHealthBox() {
+        return player2Health;
+    }
+    @Override
+    public void updateHealthBar() {
         float healthPercent = (float) currentHealth / maxHealth;
         player2Health.setWidth((getWidth() - 28) * healthPercent);
     }
+
 }

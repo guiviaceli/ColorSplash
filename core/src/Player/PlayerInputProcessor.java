@@ -13,31 +13,21 @@ public class PlayerInputProcessor implements InputProcessor {
         switch (keycode) {
             case Keys.W:
                 UP = true;
-                System.out.println("Key DownP: " + keycode);
-
                 break;
             case Keys.S:
                 DOWN = true;
-                System.out.println("Key DownP: " + keycode);
-
                 break;
             case Keys.A:
-                LEFT = true;    System.out.println("Key DownP: " + keycode);
-
-
+                LEFT = true;
                 break;
             case Keys.D:
                 RIGHT = true;
-                System.out.println("Key DownP: " + keycode);
-
                 break;
             case Keys.SPACE:
                 ATTACK = true;
-                System.out.println("Key DownP: " + keycode);
-
                 break;
         }
-        return true;
+        return false;
     }
 
     @Override
@@ -59,7 +49,7 @@ public class PlayerInputProcessor implements InputProcessor {
                 ATTACK = false;
                 break;
         }
-        return true;
+        return false;
     }
 
     @Override

@@ -2,62 +2,51 @@ package Enemy;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.InputProcessor;
 public class EnemyInputProcessor implements InputProcessor{
-    public boolean ATTACK1 = false;
-    boolean UP1,DOWN1, LEFT1, RIGHT1;
+    public boolean ATTACK = false;
+    boolean UP,DOWN, LEFT, RIGHT;
 
     @Override
     public boolean keyDown(int keycode) {
         switch (keycode) {
-
-            case Keys.I:
-                UP1 = true;
-                System.out.println("Key Down: " + keycode);
-
+            case Keys.UP:
+                UP = true;
                 break;
-            case Keys.K:
-                DOWN1 = true;
-                System.out.println("Key Down: " + keycode);
-
+            case Keys.DOWN:
+                DOWN = true;
                 break;
-            case Keys.J:
-                LEFT1 = true;
-                System.out.println("Key Down: " + keycode);
-
+            case Keys.LEFT:
+                LEFT = true;
                 break;
-            case Keys.L:
-                RIGHT1 = true;
-                System.out.println("Key Down: " + keycode);
-
+            case Keys.RIGHT:
+                RIGHT = true;
                 break;
             case Keys.CONTROL_RIGHT:
-                System.out.println("Key Down: " + keycode);
-
-                ATTACK1 = true;
+                ATTACK = true;
                 break;
         }
-        return true;
+        return false;
     }
 
     @Override
     public boolean keyUp(int keycode) {
         switch (keycode) {
-            case Keys.I:
-                UP1 = false;
+            case Keys.UP:
+                UP = false;
                 break;
-            case Keys.K:
-                DOWN1 = false;
+            case Keys.DOWN:
+                DOWN = false;
                 break;
-            case Keys.J:
-                LEFT1 = false;
+            case Keys.LEFT:
+                LEFT = false;
                 break;
-            case Keys.L:
-                RIGHT1 = false;
+            case Keys.RIGHT:
+                RIGHT = false;
                 break;
             case Keys.CONTROL_RIGHT:
-                ATTACK1 = false;
+                ATTACK = false;
                 break;
         }
-        return true;
+        return false;
     }
 
     @Override

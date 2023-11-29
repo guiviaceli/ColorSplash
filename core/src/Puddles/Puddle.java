@@ -9,24 +9,17 @@ public class Puddle {
     private Sprite sprite;
     private Rectangle puddleHitbox;
 
-    public Puddle(Texture texture, float x, float y, float scaleX, float scaleY) {
+    public Puddle(Texture texture, float x, float y) {
         this.sprite = new Sprite(texture);
         this.sprite.setPosition(x, y);
-        //this.sprite.setScale(scaleX, scaleY);
-        this.puddleHitbox = new Rectangle(sprite.getX(),
-                sprite.getY() ,
-                sprite.getWidth() ,
-                sprite.getHeight());
+        this.puddleHitbox = new Rectangle(sprite.getX(), sprite.getY() , sprite.getWidth() , sprite.getHeight());
     }
 
     public void update() {
-        puddleHitbox.setX(sprite.getX() );// - sprite.getWidth() * sprite.getScaleX() / 2);
-        puddleHitbox.setY(sprite.getY());// - sprite.getHeight() * sprite.getScaleY() / 2);
-        puddleHitbox.setWidth(sprite.getWidth());// * sprite.getScaleX());
-        puddleHitbox.setHeight(sprite.getHeight());// * sprite.getScaleY());
-        // Atualizar o hitbox para coincidir com a posição e tamanho da sprite
-//        puddleHitbox.setPosition(sprite.getX(), sprite.getY());
-//        puddleHitbox.setSize(sprite.getWidth() * sprite.getScaleX(), sprite.getHeight() * sprite.getScaleY());
+        puddleHitbox.setX(sprite.getX() );
+        puddleHitbox.setY(sprite.getY());
+        puddleHitbox.setWidth(sprite.getWidth());
+        puddleHitbox.setHeight(sprite.getHeight());
     }
 
     public void draw(SpriteBatch batch) {
