@@ -53,50 +53,37 @@ public class SplashScreen implements Screen{
         batch.draw(logo, Gdx.graphics.getWidth() / 2 - logo.getWidth() / 2,
                 Gdx.graphics.getHeight() / 2 - logo.getHeight() / 2);
 
-        String text = "Toque em qualquer lugar para continuar";
+        String text = "Toque em qualquer lugar da tela para continuar";
 
         layout.setText(font, text); // Calcula a largura do texto
 
-        // Posição do texto na parte inferior da tela, centralizado
-        float textX = (1280 - layout.width) / 2;
+        float textX = (1920 - layout.width) / 2;
         float textY = 60;
         font.draw(batch, layout, textX, textY);
-
-        //font.draw(batch, text, Gdx.graphics.getWidth() / 2 - font.getRegion().getRegionWidth() / 2,
-                //Gdx.graphics.getHeight() / 4); // Posição do texto na tela
-        // font.draw(batch, text, Gdx.graphics.getWidth() / 2 - font.getRegion().getRegionWidth() / 2,
-        //                30); // 30 pixels acima da parte inferior da tela
         batch.end();
 
-        // Aqui você pode adicionar uma condição para mudar para a tela do menu após alguns segundos ou ao tocar na tela
         if (Gdx.input.justTouched()) { game.setScreen(new MainMenuScreen(game)); }
     }
-
     @Override
     public void resize(int width, int height) {
         screenWidth = width;
         screenHeight = height;
         updateScale();
     }
-
     @Override
     public void pause() {
     }
-
     @Override
     public void resume() {
     }
-
     @Override
     public void hide() {
     }
-
     @Override
     public void dispose() {
         batch.dispose();
         logo.dispose();
         font.dispose();
-
     }
 }
 

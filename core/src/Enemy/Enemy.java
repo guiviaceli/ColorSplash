@@ -3,12 +3,9 @@ package Enemy;
 import Bottles.Bottle;
 import Bottles.RandomBottles;
 import Puddles.Puddle;
-import Screens.GameScreen;
 import Utils.AttackEffectHandler;
-import Utils.Damageable;
+import Utils.Utility;
 import Utils.Direction;
-import Utils.Direction1;
-import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Sprite;
@@ -23,7 +20,7 @@ import com.mygdx.game.ColorSplash;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Enemy extends Sprite implements Damageable {
+public class Enemy extends Sprite implements Utility {
     private float mapWidth, mapHeight;
     private static final int FRAME_WIDTH = 24;
     private static final int FRAME_HEIGHT = 32;
@@ -175,19 +172,16 @@ public class Enemy extends Sprite implements Damageable {
 
     public void attack() {
         Bottle collectedBottle = getCollectibleBottle();
-        System.out.println("ATACANDO");
-        System.out.println("Cor da garrafa " + (collectedBottle.getBottleColor()));
-
+//        System.out.println("ATACANDO");
+//        System.out.println("Cor da garrafa " + (collectedBottle.getBottleColor()));
         AttackEffectHandler.createAttackEffect(collectedBottle,currentDirection, this.getX(), this.getY(), puddles);
         useOrDiscardBottle();
-
     }
 
-    // Implementações dos métodos de Damageable
+    // Implementações dos métodos de Utility
     @Override
     public List<Puddle> getPuddles() {
         return puddles;
-
     }
     @Override
     public Rectangle getHitbox() {
@@ -197,8 +191,7 @@ public class Enemy extends Sprite implements Damageable {
     public void takeDamage(int damage) {
         if (invulnerabilityTime <= 0) {
             currentHealth -= damage;
-            System.out.println("Damage taken: " + damage + ", New health: " + currentHealth);
-
+            //System.out.println("Damage taken: " + damage + ", New health: " + currentHealth);
             if (currentHealth < 0) {
                 currentHealth = 0;
             }
@@ -215,5 +208,13 @@ public class Enemy extends Sprite implements Damageable {
         float healthPercent = (float) currentHealth / maxHealth;
         player2Health.setWidth((getWidth() - 28) * healthPercent);
     }
+    public int getMaxHealth() {
+        return maxHealth;
+    }
+
+    public int getCurrentHealth() {
+        return currentHealth;
+    }
+
 
 }

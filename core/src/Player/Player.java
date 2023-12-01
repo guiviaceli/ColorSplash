@@ -3,19 +3,15 @@ package Player;
 import Bottles.Bottle;
 import Bottles.RandomBottles;
 import Puddles.Puddle;
-import Screens.GameScreen;
-import Utils.Damageable;
+import Utils.Utility;
 import Utils.Direction;
 import Utils.AttackEffectHandler;
-import com.badlogic.gdx.audio.Sound;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
-import com.badlogic.gdx.utils.Timer;
 import com.mygdx.game.ColorSplash;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -24,46 +20,34 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import java.util.ArrayList;
 import java.util.List;
 
-import static Screens.GameScreen.player;
-import static jdk.jfr.internal.handlers.EventHandler.duration;
-
-public class Player extends Sprite implements Damageable {
-    private float mapWidth, mapHeight;
-    private PlayerInputProcessor playerInputProcessor;
+public class Player extends Sprite implements Utility {
+    private final float mapWidth;
+    private final float mapHeight;
+    private final PlayerInputProcessor playerInputProcessor;
     private static final int FRAME_WIDTH = 24;
     private static final int FRAME_HEIGHT = 32;
     private float x, y;
     private float speed = 300;
     private int frameRow;
-    private int frameCol;
     private static final int FRAMES_PER_DIRECTION = 3;
-    private Animation<TextureRegion>[] animations;
+    private final Animation<TextureRegion>[] animations;
     private float stateTime;
     private TextureRegion currentFrame;
     private boolean hasBottle;
-    private Rectangle playerHitbox;
-    private Rectangle playerHealth;
+    private final Rectangle playerHitbox;
+    private final Rectangle playerHealth;
     private Bottle collectibleBottle;
-    //private List<Sprite> spritesParaRenderizar = new ArrayList<>();
-
     private Direction currentDirection;
-
-    private int maxHealth = 100;
+    private final int maxHealth = 100;
     private int currentHealth = maxHealth;
-    private List<Puddle> puddles = new ArrayList<>();
-
-    ShapeRenderer shapeRenderer = new ShapeRenderer();
-
+    private final List<Puddle> puddles = new ArrayList<>();
     private float invulnerabilityTime = 0;
     public Player(int mapWidth, int mapHeight, PlayerInputProcessor InputProcessor){
         super(ColorSplash.manager.<Texture>get("Characters/Mage.png"));
         this.mapWidth = mapWidth;
         this.mapHeight = mapHeight;
-       //playerInputProcessor = new PlayerInputProcessor();
-        //ColorSplash.addInputProcessor(playerInputProcessor);
         this.frameRow = 0;
-        this.frameCol = 0;
-        setRegion(frameCol * FRAME_WIDTH, frameRow * FRAME_HEIGHT, FRAME_WIDTH, FRAME_HEIGHT);
+        setRegion(0, 0, FRAME_WIDTH, FRAME_HEIGHT);
         this.x = 0;
         this.y = 0;
         this.setPosition(this.x, this.y);
@@ -73,6 +57,7 @@ public class Player extends Sprite implements Damageable {
         playerHealth = new Rectangle(x, y, getWidth()- 28, getHeight() -150);
 
         animations = new Animation[4];
+
         Array<TextureRegion> frames = new Array<TextureRegion>();
 
         for (int i = 0; i < 4; i++) {
@@ -180,12 +165,10 @@ public class Player extends Sprite implements Damageable {
 
     public void attack() {
         Bottle collectedBottle = getCollectibleBottle();
-        System.out.println("ATACANDO");
-        System.out.println("Cor da garrafa " + (collectedBottle.getBottleColor()));
-
+//        System.out.println("ATACANDO");
+//        System.out.println("Cor da garrafa " + (collectedBottle.getBottleColor()));
         AttackEffectHandler.createAttackEffect(collectedBottle,currentDirection, this.getX(), this.getY(), puddles);
         useOrDiscardBottle();
-
     }
     @Override
     public Rectangle getHitbox() {
@@ -203,8 +186,7 @@ public class Player extends Sprite implements Damageable {
     public void takeDamage(int damage) {
         if (invulnerabilityTime <= 0) {
             currentHealth -= damage;
-
-            System.out.println("Damage taken: " + damage + ", New health: " + currentHealth);
+            //System.out.println("Damage taken: " + damage + ", New health: " + currentHealth);
             if (currentHealth < 0) {
                 currentHealth = 0;
             }
@@ -216,5 +198,13 @@ public class Player extends Sprite implements Damageable {
     public void updateHealthBar() {
         float healthPercent = (float) currentHealth / maxHealth;
         playerHealth.setWidth((getWidth() - 28) * healthPercent);
+    }
+
+    public int getMaxHealth() {
+        return maxHealth;
+    }
+
+    public int getCurrentHealth() {
+        return currentHealth;
     }
 }

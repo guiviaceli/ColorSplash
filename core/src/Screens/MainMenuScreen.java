@@ -48,7 +48,7 @@ public class MainMenuScreen implements Screen {
 
         TextButton playButton = new TextButton("Jogar", style);
         playButton.setSize(500, 200); // Definir o tamanho do botão
-        playButton.setPosition((1280 - 500) / 2, (960 / 2) - 100);
+        playButton.setPosition((1920 - 500) / 2, (960 / 2) - 100);
         playButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
@@ -58,7 +58,7 @@ public class MainMenuScreen implements Screen {
 
         TextButton exitButton = new TextButton("Sair", style);
         exitButton.setSize(500, 200); // Definir o tamanho do botão
-        exitButton.setPosition((1280 - 500) / 2, (960 / 2) - 250);
+        exitButton.setPosition((1920 - 500) / 2, (960 / 2) - 250);
         exitButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {

@@ -10,7 +10,7 @@ public class DesktopLauncher {
 	public static void main (String[] arg) {
 		Lwjgl3ApplicationConfiguration config = new Lwjgl3ApplicationConfiguration();
 		config.setForegroundFPS(60);
-		config.setWindowedMode(1280, 960);
+		config.setWindowedMode(1920, 960);
 		config.useVsync(false);
 		config.setTitle("Color Splash");
 		config.setWindowIcon("Icon.png");
