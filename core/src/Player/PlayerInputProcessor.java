@@ -1,6 +1,5 @@
 package Player;
 
-import Utils.InputManager;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.InputProcessor;
 

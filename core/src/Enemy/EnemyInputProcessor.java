@@ -1,4 +1,5 @@
 package Enemy;
+
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.InputProcessor;
 public class EnemyInputProcessor implements InputProcessor{

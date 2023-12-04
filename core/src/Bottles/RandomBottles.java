@@ -8,9 +8,9 @@ import java.util.Random;
 public class RandomBottles {
     private static Array<Bottle> bottles;
     private Random random;
-    private float timeToLive; // Tempo que cada garrafa fica no mapa
-    private float spawnInterval; // Intervalo de tempo entre spawns
-    private float spawnTimer; // Temporizador para o próximo spawn
+    private float timeToLive;
+    private float spawnInterval;
+    private float spawnTimer;
     private int mapWidth;
     private int mapHeight;
     private static final int MARGIN = 50;
@@ -25,9 +25,15 @@ public class RandomBottles {
         this.mapHeight = mapHeight;
     }
     private void spawnBottles() {
-        for (int i = 0; i < 4; i++) { // Gera 4 garrafas
+        for (int i = 0; i < 2; i++) { // Gera 4 garrafas
             spawnBottleAtRandomLocation();
         }
+    }
+
+
+    public void reset() {
+        bottles.clear();
+        spawnTimer = spawnInterval;
     }
 
     public Array<Bottle> getBottles() {

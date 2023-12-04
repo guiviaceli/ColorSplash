@@ -1,36 +1,32 @@
 package Screens;
 
+import AnimationEffects.*;
 import Bottles.Bottle;
-import Utils.CollisionHandler;
+import Utils.*;
 import Bottles.RandomBottles;
 import Enemy.Enemy;
 import Map.GameMap;
 import Player.Player;
 import Puddles.Puddle;
-//import Utils.PauseMenu;
-import Utils.GameUI;
 import com.badlogic.gdx.Game;
-import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Camera;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
-import Utils.InputManager;
+
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import Player.PlayerInputProcessor;
 import Enemy.EnemyInputProcessor;
-import Utils.AttackEffectHandler;
-import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.utils.viewport.FitViewport;
-import com.badlogic.gdx.utils.viewport.ScreenViewport;
+
+//import static Utils.CollisionHandler.animations;
 
 public class GameScreen implements Screen {
     private Game game;
@@ -40,39 +36,42 @@ public class GameScreen implements Screen {
     SpriteBatch batch;
     public static Player player;
     public static Enemy player2;
-    public static Bottle blackBottle ;
-    private RandomBottles randomBottles;
+    private static RandomBottles randomBottles;
     private ShapeRenderer shapeRenderer;
     public static List<Sprite> spritesParaRenderizar = new ArrayList<>();
     InputManager inputManager;
-    private List<Puddle> allPuddles = new ArrayList<>();
-
-    private List<Puddle> allPuddles1 = new ArrayList<>();
-
     private GameUI gameUI;
+    private BitmapFont font;
+    private EffectManager effectManager;
+    private CollisionHandler collisionHandler;
+    ExplosionAnimation explosionAnimation = new ExplosionAnimation();
+    FreezeAnimation freezeAnimation = new FreezeAnimation();
+    FireAnimation fireAnimation = new FireAnimation();
+    WaterAnimation waterAnimation = new WaterAnimation();
 
-    //private PauseMenu pauseMenu;
-
-
-    public GameScreen(Game game) {
+    public GameScreen(Game game, int player1Choice, int player2Choice){
         this.game = game;
         this.camera = new OrthographicCamera();
         this.camera.setToOrtho(false, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-
-        //viewport = new ExtendViewport(1100, 1100, camera);
         this.camera.update();
         this.map = new GameMap("mapa2.tmx");
+        font = new BitmapFont();
+        font.getData().setScale(3f);
 
         camera.position.set(map.getMapWidth() / 2f,  map.getMapHeight() / 2f, 0); // Ajusta para o centro do mapa
         viewport = new ExtendViewport(map.getMapWidth(), map.getMapHeight(),camera);
         viewport.apply();
-        randomBottles = new RandomBottles(map.getMapWidth(), map.getMapHeight(),15,5);
+        randomBottles = new RandomBottles(map.getMapWidth(), map.getMapHeight(),10,5);
 
         PlayerInputProcessor playerInputProcessor = new PlayerInputProcessor();
-        player = new Player(map.getMapWidth(), map.getMapHeight(),playerInputProcessor);
+        player = new Player(map.getMapWidth(), map.getMapHeight(),player1Choice,playerInputProcessor);
 
         EnemyInputProcessor player2InputProcessor = new EnemyInputProcessor();
-        player2 = new Enemy(map.getMapWidth(), map.getMapHeight(),player2InputProcessor);
+        player2 = new Enemy(map.getMapWidth(), map.getMapHeight(),player2Choice,player2InputProcessor);
+
+        effectManager = new EffectManager();
+        collisionHandler = new CollisionHandler(effectManager);
+
 
         inputManager = new InputManager();
         inputManager.addProcessor(playerInputProcessor);
@@ -81,12 +80,7 @@ public class GameScreen implements Screen {
         batch = new SpriteBatch();
         shapeRenderer = new ShapeRenderer();
 
-        //Stage sharedStage = new Stage(viewport); // Onde viewport é o mesmo que o mapa
-
-        gameUI = new GameUI();
-        //pauseMenu = new PauseMenu(game, new ScreenViewport());
-
-
+        gameUI = new GameUI(player1Choice, player2Choice);
     }
     @Override
     public void show() {
@@ -95,8 +89,6 @@ public class GameScreen implements Screen {
     public void render(float delta) {
         float deltaTime = Gdx.graphics.getDeltaTime();
         randomBottles.update(deltaTime);
-        //viewport.apply();
-        //batch.setProjectionMatrix(camera.combined);
 
         CollisionHandler.checkBottleCollisions(player, randomBottles.getBottles());
         CollisionHandler.checkBottleCollisions(player2, randomBottles.getBottles());
@@ -104,28 +96,23 @@ public class GameScreen implements Screen {
         List<Puddle> puddles;
         puddles = AttackEffectHandler.getPuddles();
 
-//            if (puddles.isEmpty()) {
-//                    System.out.println("A lista Puddles está vazia.");
-//                } else {
-//                    System.out.println("Existem " + puddles.size() + " poças na lista Puddles.");
-//                }
-
-
         CollisionHandler.checkPuddleCollisions(player, puddles);
         CollisionHandler.checkPuddleCollisions(player2, puddles);
 
-//            if (allPuddles.isEmpty()) {
-//                System.out.println("A lista allPuddles está vazia.");
-//            } else {
-//                System.out.println("Existem " + allPuddles.size() + " poças na lista allPuddles.");
-//            }
+        String collisionColorPlayer1 = CollisionHandler.checkPuddleCollisions(player, puddles);
+        String collisionColorPlayer2 = CollisionHandler.checkPuddleCollisions(player2, puddles);
+
+        AttackEffectHandler.updatePuddles(delta); // Atualiza as poças
+
+
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         camera.update();
 
         batch.begin();
-        gameUI.draw(batch);
+        gameUI.draw(batch, player, player2);
         batch.end();
+
         batch.begin();
         map.render(camera);
         Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
@@ -133,72 +120,67 @@ public class GameScreen implements Screen {
         randomBottles.render(batch);
 
         for (Puddle puddle : player.getPuddles()) {
-            puddle.update();
+            puddle.update(delta);
             puddle.draw(batch);
         }
         for (Puddle puddle : player2.getPuddles()) {
-            puddle.update();
+            puddle.update(delta);
             puddle.draw(batch);
         }
         for (Sprite sprite : spritesParaRenderizar) {
             sprite.draw(batch);
         }
         player.draw(batch, Gdx.graphics.getDeltaTime());
-        player2.draw(batch, Gdx.graphics.getDeltaTime());
-
+        player2.draw(batch, Gdx.graphics.getDeltaTime(), font);
 
         batch.end();
 
+        batch.begin();
+        handlePlayerAnimation(collisionColorPlayer1, player, batch);
+        handlePlayerAnimation(collisionColorPlayer2, player2, batch);
+        batch.end();
 
-
-
-        shapeRenderer.setProjectionMatrix(camera.combined);
-        shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
-
-        shapeRenderer.rect(player.getHitbox().x, player.getHitbox().y, player.getHitbox().width, player.getHitbox().height);
-        shapeRenderer.end(); // Finalizar a sessão antes de iniciar a próxima
-        shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
-
-        shapeRenderer.rect(player2.getHitbox().x, player2.getHitbox().y, player2.getHitbox().width, player2.getHitbox().height);
-        shapeRenderer.end();
-
-        shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
-        shapeRenderer.setColor(Color.GREEN);
-        shapeRenderer.rect(player.getHealthBox().x, player.getHealthBox().y, player.getHealthBox().width, player.getHealthBox().height);
-        shapeRenderer.end();
-
-        shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
-        shapeRenderer.setColor(Color.RED);
-        shapeRenderer.rect(player2.getHealthBox().x, player2.getHealthBox().y, player2.getHealthBox().width, player2.getHealthBox().height);
-        shapeRenderer.end();
-
-        shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
-        shapeRenderer.setColor(Color.BLACK);
-
-        for (Puddle puddle : player.getPuddles()) {
-            Rectangle hitbox = puddle.getPuddleHitbox();
-            shapeRenderer.rect(hitbox.x, hitbox.y, hitbox.width, hitbox.height);
+        if (player.getCurrentHealth() <= 0) {
+            game.setScreen(new GameOverScreen(game, "Player 2", "Player 1"));
+        } else if (player2.getCurrentHealth() <= 0) {
+            game.setScreen(new GameOverScreen(game, "Player 1", "Player 2"));
         }
-        shapeRenderer.end();
-
-        shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
-        shapeRenderer.setColor(Color.BLUE);
-
-        for (Puddle puddle : player2.getPuddles()) {
-            Rectangle hitbox = puddle.getPuddleHitbox();
-            shapeRenderer.rect(hitbox.x, hitbox.y, hitbox.width, hitbox.height);
-        }
-        shapeRenderer.end();
-
-        shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
-        for (Bottle bottle : randomBottles.getBottles()) {
-            shapeRenderer.rect(bottle.getHitbox().x, bottle.getHitbox().y, bottle.getHitbox().width, bottle.getHitbox().height);
-        }
-        shapeRenderer.setColor(Color.YELLOW);
-        shapeRenderer.end();
-
-
     }
+
+    public static void restartGame() {
+        player.reset();
+        player2.reset();
+        randomBottles.reset();
+        AttackEffectHandler.resetPuddles();
+    }
+    private void handlePlayerAnimation(String collisionColor, Utility entity, SpriteBatch batch) {
+        if (!collisionColor.isEmpty()) {
+            switch (collisionColor) {
+                case "BLUE LIGHT":
+                    freezeAnimation.setPosition(entity.getX(), entity.getY());
+                    freezeAnimation.update(Gdx.graphics.getDeltaTime());
+                    freezeAnimation.render(batch);
+                    break;
+                case "BLUE":
+                    waterAnimation.setPosition(entity.getX(), entity.getY());
+                    waterAnimation.update(Gdx.graphics.getDeltaTime());
+                    waterAnimation.render(batch);
+                    break;
+                case "RED":
+                    fireAnimation.setPosition(entity.getX(), entity.getY());
+                    fireAnimation.update(Gdx.graphics.getDeltaTime());
+                    fireAnimation.render(batch);
+                    break;
+                case "BLACK":
+                    System.out.println("Entrou aqui");
+                    explosionAnimation.setPosition(entity.getX(), entity.getY());
+                    explosionAnimation.update(Gdx.graphics.getDeltaTime());
+                    explosionAnimation.render(batch);
+                    break;
+            }
+        }
+    }
+
     @Override
     public void resize(int width, int height) {
         viewport.update(width, height, true);
