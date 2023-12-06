@@ -42,6 +42,7 @@ public class GameScreen implements Screen {
     InputManager inputManager;
     private final GameUI gameUI;
     private final BitmapFont font;
+
     public static List<SimpleAnimation> activeAnimations;
     Texture explosionTexture;
     Texture waterTexture;
