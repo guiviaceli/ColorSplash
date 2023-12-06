@@ -2,7 +2,6 @@ package Player;
 
 import Bottles.Bottle;
 import Bottles.RandomBottles;
-import Enemy.Enemy;
 import Puddles.Puddle;
 import Utils.Utility;
 import Utils.Direction;
@@ -26,7 +25,6 @@ public class Player extends Sprite implements Utility {
     private static final int FRAME_WIDTH = 24;
     private static final int FRAME_HEIGHT = 32;
     private float x, y;
-    private float speed = 300;
     private int frameRow;
     private static final int FRAMES_PER_DIRECTION = 3;
     private final Animation<TextureRegion>[] animations;
@@ -43,7 +41,7 @@ public class Player extends Sprite implements Utility {
     private float invulnerabilityTime = 0;
     private boolean isFrozen;
     private float freezeTime;
-    private List<DamageNotification> damageNotifications = new ArrayList<>();
+    private final List<DamageNotification> damageNotifications = new ArrayList<>();
     public Player(int mapWidth, int mapHeight, int characterChoice, PlayerInputProcessor InputProcessor){
         super(ColorSplash.manager.<Texture>get("Characters/Character" + characterChoice + ".png"));
         this.mapWidth = mapWidth;
@@ -60,14 +58,14 @@ public class Player extends Sprite implements Utility {
 
         animations = new Animation[4];
 
-        Array<TextureRegion> frames = new Array<TextureRegion>();
+        Array<TextureRegion> frames = new Array<>();
 
         for (int i = 0; i < 4; i++) {
             frames.clear();
             for (int j = 0; j < FRAMES_PER_DIRECTION; j++) {
                 frames.add(new TextureRegion(getTexture(), j * FRAME_WIDTH, i * FRAME_HEIGHT, FRAME_WIDTH, FRAME_HEIGHT));
             }
-            animations[i] = new Animation<TextureRegion>(0.1f, frames, Animation.PlayMode.LOOP);
+            animations[i] = new Animation<>(0.1f, frames, Animation.PlayMode.LOOP);
         }
         stateTime = 0f;
         currentFrame = getFrame();
@@ -105,6 +103,7 @@ public class Player extends Sprite implements Utility {
             playerHitbox.setPosition(x, y);
             playerHealth.setPosition(x, y + 140);
 
+            float speed = 300;
             if (playerInputProcessor.UP) {
                 y += speed * delta;
                 frameRow = 0;
@@ -140,7 +139,6 @@ public class Player extends Sprite implements Utility {
             if (invulnerabilityTime > 0) {
                 invulnerabilityTime -= delta;
             }
-            System.out.println("Posição do jogador: x=" + x + ", y=" + y);
 
         }
         Iterator<DamageNotification> iterator = damageNotifications.iterator();
@@ -204,10 +202,10 @@ public class Player extends Sprite implements Utility {
         isFrozen = true;
         freezeTime = duration;
     }
-    private class DamageNotification {
-        float x, y; // Posição na tela
-        int damage; // Valor do dano
-        float timeRemaining; // Tempo restante para exibir a notificação
+    private static class DamageNotification {
+        float x, y;
+        int damage;
+        float timeRemaining;
 
         public DamageNotification(float x, float y, int damage, float duration) {
             this.x = x;
@@ -216,12 +214,10 @@ public class Player extends Sprite implements Utility {
             this.timeRemaining = duration;
         }
 
-        // Método para atualizar o tempo restante
         public void update(float delta) {
             timeRemaining -= delta;
         }
 
-        // Verificar se a notificação ainda é válida
         public boolean isAlive() {
             return timeRemaining > 0;
         }

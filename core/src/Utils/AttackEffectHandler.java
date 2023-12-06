@@ -13,13 +13,14 @@ import java.util.Iterator;
 import java.util.List;
 
 public class AttackEffectHandler extends Sprite{
+    public static Sprite bottleTexture;
     private static final List<Puddle> allPuddles1 = new ArrayList<>();
 
     public static void createAttackEffect(Bottle bottle, Direction direction, float playerX, float playerY, final List<Puddle> Puddles) {
         float distance = 150;
         float scaleX = 0.25f, scaleY = 0.25f;
 
-        final Sprite bottleTexture = new Sprite(bottle.getTexture());// obter a textura da garrafa;
+        bottleTexture = new Sprite(bottle.getTexture());
         final String bottleColor = bottle.getBottleColor();
         Texture texture = null;
 
@@ -69,6 +70,7 @@ public class AttackEffectHandler extends Sprite{
                 bottleThrowSound.setPitch(soundId, 2);
                 GameScreen.spritesParaRenderizar.remove(bottleTexture);
                 Puddle puddle = new Puddle(finalTexture, X, Y, bottleColor);
+                System.out.println("Puddle x" + X + "Puddle Y " + Y);
                 Puddles.add(puddle);
 
                 allPuddles1.addAll(Puddles);

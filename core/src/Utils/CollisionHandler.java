@@ -1,23 +1,16 @@
 package Utils;
 
-import AnimationEffects.EffectManager;
-import AnimationEffects.SimpleAnimation;
+import AnimationEffects.*;
 import Bottles.Bottle;
 import Puddles.Puddle;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.Array;
 
-import java.util.ArrayList;
-import java.util.Iterator;
+import javax.swing.table.AbstractTableModel;
 import java.util.List;
 
-public class CollisionHandler{
-    private static EffectManager effectManager;
-    //public static List<SimpleAnimation> animations = new ArrayList<>(); // Lista para armazenar animações
-
-    public CollisionHandler(EffectManager effectManager) {
-        this.effectManager = effectManager;
-    }
+public class CollisionHandler {
     public static void checkBottleCollisions(Utility entity, Array<Bottle> bottles) {
         for (Bottle bottle : bottles) {
             if (entity.getHitbox().overlaps(bottle.getHitbox()) && !entity.hasBottle()) {
@@ -25,23 +18,29 @@ public class CollisionHandler{
             }
         }
     }
-    public static String checkPuddleCollisions(Utility entity, List<Puddle> allPuddles) {
+
+    public static void checkPuddleCollisions(Utility entity, List<Puddle> allPuddles) {
         for (Puddle puddle : allPuddles) {
-            if (puddle.isAlive() && entity.getHitbox().overlaps(puddle.getPuddleHitbox())) {
+            if (puddle.isAlive() && entity.getHitbox().overlaps(puddle.getPuddleHitbox()) && !puddle.isAnimationStarted()) {
                 if (puddle.getBottleColor().equals("BLUE LIGHT")) {
                     entity.freeze(3.0f);
-                }if (puddle.getBottleColor().equals("BLUE")) {
-                    entity.freeze(1.0f);
-                }if (puddle.getBottleColor().equals("RED")) {
-                    entity.freeze(1.0f);
-                }if (puddle.getBottleColor().equals("BLACK")) {
-                    entity.freeze(1.0f);
+                    entity.takeDamage(50);
+                    puddle.startAnimation();
+                }
+                if (puddle.getBottleColor().equals("BLUE")) {
+                    entity.takeDamage(50);
+                    puddle.startAnimation();
+                }
+                if (puddle.getBottleColor().equals("RED")) {
+                    entity.takeDamage(50);
+                    puddle.startAnimation();
+                }
+                if (puddle.getBottleColor().equals("BLACK")) {
+                    entity.takeDamage(50);
+                    puddle.startAnimation();
                 }
             }
-            return puddle.getBottleColor();
         }
-        return ""; // Retorna uma string vazia se não houver colisão
     }
-
-
 }
+

@@ -15,21 +15,22 @@ import java.util.Arrays;
 import java.util.List;
 
 public class GameUI implements Utility{
-    private TextureRegion playerFaceRegion;
-    private TextureRegion player2FaceRegion;
+    private final TextureRegion playerFaceRegion;
+    private final TextureRegion player2FaceRegion;
     private final Texture backgroundTexture;
-    private Texture playerTexture;
-    private Texture player2Texture;
-    private ShapeRenderer shapeRenderer;
+    private final Texture playerTexture;
+    private final Texture player2Texture;
+    private final ShapeRenderer shapeRenderer;
     private static final int HEALTH_BAR_WIDTH = 250;
     private static final int HEALTH_BAR_HEIGHT = 20;
     private static final int PLAYER1_HEALTH_BAR_X = 220;
     private static final int PLAYER1_HEALTH_BAR_Y = Gdx.graphics.getHeight() - 825;
     private static final int PLAYER2_HEALTH_BAR_X = Gdx.graphics.getWidth() - 450;
     private static final int PLAYER2_HEALTH_BAR_Y = Gdx.graphics.getHeight() - 825;
-    private BitmapFont font;
-    private List<String> characterNames;
-    private int choice1, choice2;
+    private final BitmapFont font;
+    private final List<String> characterNames;
+    private final int choice1;
+    private final int choice2;
 
     public GameUI(int characterChoice1, int characterChoice2) {
         characterNames = Arrays.asList("Velhote", "Camponesa", "Mocinha", "Bailarina", "Palhaço", "Misteriosa", "Dançarina",
@@ -124,7 +125,6 @@ public class GameUI implements Utility{
 
     @Override
     public void takeDamage(int damage) {
-
     }
 
     @Override
@@ -171,7 +171,4 @@ public class GameUI implements Utility{
     public float getY() {
         return 0;
     }
-
-
-    // Outros métodos da UI conforme necessário...
 }

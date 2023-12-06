@@ -9,8 +9,6 @@ import com.badlogic.gdx.graphics.Texture;
 
 public class ColorSplash extends Game {
 	public static AssetManager manager;
-	public static Music music;
-
 	@Override
 	public void create() {
 		manager = new AssetManager();
@@ -75,13 +73,15 @@ public class ColorSplash extends Game {
 		manager.load("AnimationEffects/FireAnimation.png", Texture.class);
 		manager.load("AnimationEffects/FreezeAnimation.png", Texture.class);
 		manager.load("AnimationEffects/WaterAnimation.png", Texture.class);
-		//manager.load("sounds/music.mp3", Music.class); musica
+		manager.load("AnimationEffects/water2.png", Texture.class);
+		manager.load("sounds/MainMenu.mp3", Music.class);
+		manager.load("sounds/battleThemeA.mp3", Music.class);
+		manager.load("sounds/SelectionScreen.mp3", Music.class);
 		manager.load("sounds/Bottle Break.wav", Sound.class); //efeitos especiais
+		manager.load("sounds/Victory.wav", Music.class);
+		manager.load("victory.png", Texture.class);
+
 		manager.finishLoading();
-//		music = manager.get("sounds/music.mp3");
-//		music.setLooping(true);
-//		music.setVolume(0.02f);
-//		music.play();
 		this.setScreen(new SplashScreen(this));
 	}
 	@Override
@@ -94,5 +94,6 @@ public class ColorSplash extends Game {
 		if (getScreen() != null) {
 			getScreen().dispose();
 		}
+		manager.dispose();
 	}
 }

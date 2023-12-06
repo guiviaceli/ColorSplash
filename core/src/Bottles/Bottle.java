@@ -1,4 +1,3 @@
-
 package Bottles;
 
 import com.badlogic.gdx.graphics.Texture;
@@ -8,19 +7,19 @@ import com.mygdx.game.ColorSplash;
 import com.badlogic.gdx.math.Rectangle;
 
 public class Bottle extends Sprite {
-
     private Texture texture;
-    private Rectangle hitbox;
-    private String color; // Adicionar identificador de cor
+    private final Rectangle hitbox;
+    private String color;
+    private final float scaleX = 0.25f;
+    private final float scaleY = 0.25f;
+    private float timeToLive;
 
-    private float scaleX = 0.25f, scaleY = 0.25f;
-    private float timeToLive; // Tempo total de vida da garrafa
     public Bottle(int type) {
         switch (type) {
             case 0:
-                this.texture = ColorSplash.manager.get("Bottles/BLACK.png", Texture.class);
+                this.texture = ColorSplash.manager.get("Bottles/BLACK.png",
+                        Texture.class);
                 this.color = "BLACK";
-
                 break;
             case 1:
                 this.texture = ColorSplash.manager.get("Bottles/BLUE.png", Texture.class);
@@ -38,8 +37,7 @@ public class Bottle extends Sprite {
         hitbox = new Rectangle(getX(), getY(), texture.getWidth(), texture.getHeight());
         setBounds(getX(), getY(), texture.getWidth(), texture.getHeight());
         setRegion(texture);
-        setScale(scaleX, scaleY); // Aplica a escala
-
+        setScale(scaleX, scaleY);
     }
     public void setTimeToLive(float timeToLive) {
         this.timeToLive = timeToLive;

@@ -2,6 +2,7 @@ package Screens;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
@@ -14,18 +15,25 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
+import com.mygdx.game.ColorSplash;
 
 public class MainMenuScreen implements Screen {
-    private Stage stage;
-    private Game game;
+    private final Stage stage;
+    private final Game game;
     private SpriteBatch batch;
     private Texture background;
     private Texture title;
+    private final Music backgroundMusic;
+
 
     public MainMenuScreen(Game game) {
         this.game = game;
         final Game finalGame = game;
         stage = new Stage();
+
+        backgroundMusic = ColorSplash.manager.get("sounds/MainMenu.mp3", Music.class);
+
+
 
         Texture upTexture = new Texture(Gdx.files.internal("blue-.png"));
         TextureRegion upRegion = new TextureRegion(upTexture);
@@ -70,6 +78,9 @@ public class MainMenuScreen implements Screen {
         batch = new SpriteBatch();
         background = new Texture(Gdx.files.internal("background.png"));
         title = new Texture(Gdx.files.internal("nome1.png"));
+        backgroundMusic.setLooping(true);
+        backgroundMusic.setVolume(0.3f);
+        backgroundMusic.play();
     }
 
     @Override
@@ -100,7 +111,9 @@ public class MainMenuScreen implements Screen {
     public void resume() {}
 
     @Override
-    public void hide() {}
+    public void hide() {
+        backgroundMusic.stop();
+    }
 
     @Override
     public void dispose() {
@@ -108,5 +121,7 @@ public class MainMenuScreen implements Screen {
         batch.dispose();
         background.dispose();
         title.dispose();
+        backgroundMusic.dispose();
+
     }
 }

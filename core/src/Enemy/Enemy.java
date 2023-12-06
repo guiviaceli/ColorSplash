@@ -16,30 +16,30 @@ import java.util.Iterator;
 import java.util.List;
 
 public class Enemy extends Sprite implements Utility {
-    private float mapWidth, mapHeight;
+    private final float mapWidth;
+    private final float mapHeight;
     private static final int FRAME_WIDTH = 24;
     private static final int FRAME_HEIGHT = 32;
     private float x, y;
-    private float speed = 300;
+    private final float speed = 300;
     private int frameRow;
-    private int frameCol;
     private static final int FRAMES_PER_DIRECTION = 3;
-    private Animation<TextureRegion>[] animations;
+    private final Animation<TextureRegion>[] animations;
     private float stateTime;
     private TextureRegion currentFrame;
     private boolean hasBottle;
-    private Rectangle player2Hitbox;
-    private Rectangle player2Health;
+    private final Rectangle player2Hitbox;
+    private final Rectangle player2Health;
     private Bottle collectibleBottle;
     private Direction currentDirection;
-    private int maxHealth = 100;
+    private final int maxHealth = 100;
     private int currentHealth = maxHealth;
-    private List<Puddle> puddles = new ArrayList<>();
-    private EnemyInputProcessor player2InputProcessor;
+    private final List<Puddle> puddles = new ArrayList<>();
+    private final EnemyInputProcessor player2InputProcessor;
     private float invulnerabilityTime = 0;
     private boolean isFrozen;
     private float freezeTime;
-    private List<DamageNotification> damageNotifications = new ArrayList<>();
+    private final List<DamageNotification> damageNotifications = new ArrayList<>();
 
 
     public Enemy(int mapWidth, int mapHeight, int characterChoice, EnemyInputProcessor InputProcessor){
@@ -47,7 +47,7 @@ public class Enemy extends Sprite implements Utility {
         this.mapWidth = mapWidth;
         this.mapHeight = mapHeight;
         this.frameRow = 0;
-        this.frameCol = 0;
+        int frameCol = 0;
         setRegion(frameCol * FRAME_WIDTH, frameRow * FRAME_HEIGHT, FRAME_WIDTH, FRAME_HEIGHT);
         this.x = 850;
         this.y = 0;
@@ -58,14 +58,14 @@ public class Enemy extends Sprite implements Utility {
         player2Health = new Rectangle(x, y, getWidth()- 28, getHeight() -150);
 
         animations = new Animation[4];
-        Array<TextureRegion> frames = new Array<TextureRegion>();
+        Array<TextureRegion> frames = new Array<>();
 
         for (int i = 0; i < 4; i++) {
             frames.clear();
             for (int j = 0; j < FRAMES_PER_DIRECTION; j++) {
                 frames.add(new TextureRegion(getTexture(), j * FRAME_WIDTH, i * FRAME_HEIGHT, FRAME_WIDTH, FRAME_HEIGHT));
             }
-            animations[i] = new Animation<TextureRegion>(0.1f, frames, Animation.PlayMode.LOOP);
+            animations[i] = new Animation<>(0.1f, frames, Animation.PlayMode.LOOP);
         }
         stateTime = 0f;
         currentFrame = getFrame();
@@ -169,8 +169,6 @@ public class Enemy extends Sprite implements Utility {
             if (invulnerabilityTime > 0) {
                 invulnerabilityTime -= delta;
             }
-            System.out.println("Posição do jogador: x=" + x + ", y=" + y);
-
         }
         Iterator<DamageNotification> iterator = damageNotifications.iterator();
         while (iterator.hasNext()) {
@@ -185,10 +183,10 @@ public class Enemy extends Sprite implements Utility {
         isFrozen = true;
         freezeTime = duration;
     }
-    private class DamageNotification {
-        float x, y; // Posição na tela
-        int damage; // Valor do dano
-        float timeRemaining; // Tempo restante para exibir a notificação
+    private static class DamageNotification {
+        float x, y;
+        int damage;
+        float timeRemaining;
 
         public DamageNotification(float x, float y, int damage, float duration) {
             this.x = x;
@@ -197,12 +195,10 @@ public class Enemy extends Sprite implements Utility {
             this.timeRemaining = duration;
         }
 
-        // Método para atualizar o tempo restante
         public void update(float deltaTime) {
             timeRemaining -= deltaTime;
         }
 
-        // Verificar se a notificação ainda é válida
         public boolean isAlive() {
             return timeRemaining > 0;
         }
@@ -239,17 +235,18 @@ public class Enemy extends Sprite implements Utility {
     }
     @Override
     public void takeDamage(int damage) {
-        //if (invulnerabilityTime <= 0) {
+        if (invulnerabilityTime <= 0) {
             currentHealth -= damage;
             if (currentHealth < 0) {
                 currentHealth = 0;
             }
             invulnerabilityTime = 1.0f;
             updateHealthBar();
-            damageNotifications.add(new DamageNotification(x + 60, y + 96 , damage, 0.2f));
+            damageNotifications.add(new DamageNotification(x + 70, y + 96,
+                    damage, 0.2f));
 
         }
-   // }
+   }
     @Override
     public Rectangle getHealthBox() {
         return player2Health;

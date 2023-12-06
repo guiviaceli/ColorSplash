@@ -7,12 +7,12 @@ import java.util.Random;
 
 public class RandomBottles {
     private static Array<Bottle> bottles;
-    private Random random;
+    private final Random random;
     private float timeToLive;
-    private float spawnInterval;
+    private final float spawnInterval;
     private float spawnTimer;
-    private int mapWidth;
-    private int mapHeight;
+    private final int mapWidth;
+    private final int mapHeight;
     private static final int MARGIN = 50;
 
     public RandomBottles(int mapWidth, int mapHeight, float timeToLive, float spawnInterval) {
@@ -25,11 +25,10 @@ public class RandomBottles {
         this.mapHeight = mapHeight;
     }
     private void spawnBottles() {
-        for (int i = 0; i < 2; i++) { // Gera 4 garrafas
+        for (int i = 0; i < 3; i++) {
             spawnBottleAtRandomLocation();
         }
     }
-
 
     public void reset() {
         bottles.clear();
@@ -41,13 +40,12 @@ public class RandomBottles {
     }
 
     public static void removeBottle(Bottle bottle) {
-        boolean removed = bottles.removeValue(bottle, true);
-        System.out.println("Garrafa removida: " + removed);
+        bottles.removeValue(bottle, true);
     }
     public void update(float delta) {
         spawnTimer -= delta;
         if (spawnTimer <= 0) {
-            spawnBottles(); // Alterado para chamar spawnBottles
+            spawnBottles();
             spawnTimer = spawnInterval;
         }
         Iterator<Bottle> iterator = bottles.iterator();
@@ -55,7 +53,7 @@ public class RandomBottles {
             Bottle bottle = iterator.next();
             bottle.update(delta);
             if (bottle.isTimeUp()) {
-                iterator.remove(); // Remove a garrafa se o tempo acabou
+                iterator.remove();
             }
         }
     }
@@ -72,15 +70,11 @@ public class RandomBottles {
     }
 
     public void spawnBottle(float x, float y) {
-        int type = random.nextInt(4); // Gera um tipo aleatório (0 a 3)
-        System.out.println("Type is " + (type));
+        int type = random.nextInt(4);
         Bottle bottle = new Bottle(type);
         bottle.setPosition(x, y);
         bottle.setTimeToLive(timeToLive);
         bottles.add(bottle);
-    }
-    public void setTimeToLive(float timeToLive) {
-        this.timeToLive = timeToLive;
     }
 
 }

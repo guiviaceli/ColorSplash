@@ -3,6 +3,7 @@ package Screens;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
@@ -16,30 +17,29 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.graphics.g2d.GlyphLayout;
+import com.mygdx.game.ColorSplash;
 
 public class CharacterSelectScreen implements Screen {
-    private Game game;
-    private Texture[] characterSheets;
+    private final Game game;
+    private final Texture[] characterSheets;
     private int currentPlayer;
     private int player1Choice, player2Choice;
-    private SpriteBatch batch;
-    private CharacterIcon[] characterIcons;
+    private final SpriteBatch batch;
+    private final CharacterIcon[] characterIcons;
     private final int CHARACTERS_PER_ROW = 6;
     private final int PADDING = 20;
     int iconWidth = 100;
     int iconHeight = 100;
     private int tempPlayer1Choice = -1;
     private int tempPlayer2Choice = -1;
-    private Stage stage;
+    private final Stage stage;
     private static final int FRAME_WIDTH = 24;
     private static final int FRAME_HEIGHT = 32;
-    private String textoChoice= "Selecione um personagem:";
-    private String textoPlayer1 = "PLAYER 1";
-    private String textoPlayer2 = "PLAYER 2";
     private GlyphLayout layout;
     private GlyphLayout layout1;
     private GlyphLayout layout2;
-    private BitmapFont font;
+    private final BitmapFont font;
+    private final Music backgroundMusic;
 
     public CharacterSelectScreen(final Game game) {
         this.game = game;
@@ -53,6 +53,8 @@ public class CharacterSelectScreen implements Screen {
         layout = new GlyphLayout();
         layout1 = new GlyphLayout();
         layout2 = new GlyphLayout();
+
+        backgroundMusic = ColorSplash.manager.get("sounds/SelectionScreen.mp3", Music.class);
 
         for (int i = 0; i < characterSheets.length; i++) {
             characterSheets[i] = new Texture(Gdx.files.internal("Characters/Character" + i + ".png"));
@@ -92,7 +94,7 @@ public class CharacterSelectScreen implements Screen {
                 } else if (currentPlayer == 2 && tempPlayer2Choice != -1) {
                     player2Choice = tempPlayer2Choice;
                     tempPlayer2Choice = -1;
-                    if (player1Choice != -1 && player2Choice != -1) {
+                    if (player1Choice != -1) {
                         game.setScreen(new GameScreen(game, player1Choice, player2Choice));
                     }
                 }
@@ -104,7 +106,7 @@ public class CharacterSelectScreen implements Screen {
 
     }
 
-    private class CharacterIcon {
+    private static class CharacterIcon {
         public TextureRegion region;
         public Rectangle hitbox;
 
@@ -127,8 +129,13 @@ public class CharacterSelectScreen implements Screen {
         float startingX = (screenWidth - totalWidth) / 2;
         float startingY = (screenHeight - totalHeight) / 2;
 
+        backgroundMusic.setLooping(true);
+        backgroundMusic.setVolume(0.3f);
+        backgroundMusic.play();
+
         batch.begin();
-        layout = new GlyphLayout(font,textoChoice);
+        String textoChoice = "Selecione um personagem:";
+        layout = new GlyphLayout(font, textoChoice);
         layout.setText(font, textoChoice);
         float textX = (1920 - layout.width) / 2;
         float textY =930;
@@ -143,7 +150,8 @@ public class CharacterSelectScreen implements Screen {
         batch.end();
 
         batch.begin();
-        layout1 = new GlyphLayout(font,textoPlayer1);
+        String textoPlayer1 = "PLAYER 1";
+        layout1 = new GlyphLayout(font, textoPlayer1);
         layout1.setText(font, textoPlayer1);
         float textX1 =125;
         float textY1 =700;
@@ -151,7 +159,8 @@ public class CharacterSelectScreen implements Screen {
         batch.end();
 
         batch.begin();
-        layout2 = new GlyphLayout(font,textoPlayer2);
+        String textoPlayer2 = "PLAYER 2";
+        layout2 = new GlyphLayout(font, textoPlayer2);
         layout2.setText(font, textoPlayer2);
         float textX2 =1600;
         float textY2 =700;
@@ -163,8 +172,6 @@ public class CharacterSelectScreen implements Screen {
 
             Texture characterTexture = characterSheets[tempPlayer1Choice];
             TextureRegion selectedSprite = new TextureRegion(characterTexture, 2*FRAME_WIDTH, 2 * FRAME_HEIGHT, FRAME_WIDTH, FRAME_HEIGHT);
-            float x = Gdx.graphics.getWidth() - FRAME_WIDTH * 3;
-            float y = Gdx.graphics.getHeight() - FRAME_HEIGHT * 3;
             float scale = 10.0f;
             batch.draw(selectedSprite, 50, 300, FRAME_WIDTH * scale, FRAME_HEIGHT * scale);
         }
@@ -172,9 +179,6 @@ public class CharacterSelectScreen implements Screen {
         if (tempPlayer2Choice != -1) {
             Texture characterTexture = characterSheets[tempPlayer2Choice];
             TextureRegion selectedSprite = new TextureRegion(characterTexture, 2*FRAME_WIDTH, 2 * FRAME_HEIGHT, FRAME_WIDTH, FRAME_HEIGHT);
-
-            float x = Gdx.graphics.getWidth() - FRAME_WIDTH * 3;
-            float y = Gdx.graphics.getHeight() - FRAME_HEIGHT * 3;
             float scale = 10.0f;
             batch.draw(selectedSprite, 1600, 300, FRAME_WIDTH * scale, FRAME_HEIGHT * scale);
         }
@@ -214,11 +218,14 @@ public class CharacterSelectScreen implements Screen {
     }
     @Override
     public void hide() {
-
+        backgroundMusic.stop();
     }
     @Override
     public void dispose() {
         stage.dispose();
+        if (backgroundMusic != null) {
+            backgroundMusic.dispose();
+        }
 
     }
 }

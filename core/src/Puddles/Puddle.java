@@ -1,24 +1,66 @@
 package Puddles;
 
+import AnimationEffects.SimpleAnimation;
+import Screens.GameScreen;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Rectangle;
 
-public class Puddle {
-    private Sprite sprite;
-    private Rectangle puddleHitbox;
-    private float timeToLive;
+import static com.mygdx.game.ColorSplash.manager;
+
+public class Puddle extends Sprite{
+    private final Sprite sprite;
+    private final Rectangle puddleHitbox;
+    private final float timeToLive;
     private float elapsedTime;
-    private String bottleColor;
+    private final String bottleColor;
+    private boolean animationStarted = false;
+    private SimpleAnimation puddleAnimation;
+
+    Texture explosionTexture;
+    Texture waterTexture;
+    Texture fireTexture;
+    Texture freezeTexture;
+
+    float x1, y1;
+
 
     public Puddle(Texture texture, float x, float y, String bottleColor) {
-        timeToLive = 10;
+        explosionTexture = manager.get("AnimationEffects/ExplosionAnimation.png", Texture.class);
+        waterTexture = manager.get("AnimationEffects/water2.png", Texture.class);
+        fireTexture = manager.get("AnimationEffects/FireAnimation.png", Texture.class);
+        freezeTexture = manager.get("AnimationEffects/FreezeAnimation.png", Texture.class);
+        timeToLive = 5;
         elapsedTime = 0;
         this.bottleColor = bottleColor;
         this.sprite = new Sprite(texture);
         this.sprite.setPosition(x, y);
+        x1 =x;
+        y1 = y;
         this.puddleHitbox = new Rectangle(sprite.getX(), sprite.getY() , sprite.getWidth() , sprite.getHeight());
+    }
+
+    public void startAnimation() {
+        if (!animationStarted) {
+            switch (bottleColor) {
+                case "BLUE":
+                    puddleAnimation = SimpleAnimation.createWaterAnimation(waterTexture);
+                    break;
+                case "RED":
+                    puddleAnimation = SimpleAnimation.createFireAnimation(fireTexture);
+                    break;
+                case "BLUE LIGHT":
+                    puddleAnimation = SimpleAnimation.createFreezeAnimation(freezeTexture);
+                    break;
+                case "BLACK":
+                    puddleAnimation = SimpleAnimation.createExplosionAnimation(explosionTexture);
+                    break;
+            }
+            puddleAnimation.setPosition(sprite.getX() + 500,sprite.getY() + 50);
+            animationStarted = true;
+            GameScreen.activeAnimations.add(puddleAnimation);
+        }
     }
 
     public void update(float delta) {
@@ -56,5 +98,9 @@ public class Puddle {
 
     public float getY() {
         return sprite.getY();
+    }
+
+    public boolean isAnimationStarted() {
+        return animationStarted;
     }
 }
