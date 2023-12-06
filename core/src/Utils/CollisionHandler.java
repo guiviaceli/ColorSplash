@@ -1,13 +1,8 @@
 package Utils;
 
-import AnimationEffects.*;
 import Bottles.Bottle;
 import Puddles.Puddle;
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.Array;
-
-import javax.swing.table.AbstractTableModel;
 import java.util.List;
 
 public class CollisionHandler {
